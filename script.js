@@ -15,6 +15,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const fallingPetalsEl = document.getElementById('fallingPetals');
     const scene = document.querySelector('.scene');
 
+
+
+const music = document.getElementById("bgMusic");
+
+// Try to play when the website opens
+window.addEventListener("load", () => {
+    music.volume = 0.5;
+
+    music.play().catch(() => {
+        // Autoplay was blocked — wait for first interaction
+    });
+});
+
+// Start music on the first user interaction
+const startMusic = () => {
+    music.play().catch(() => {});
+    
+    document.removeEventListener("click", startMusic);
+    document.removeEventListener("touchstart", startMusic);
+    document.removeEventListener("keydown", startMusic);
+};
+
+document.addEventListener("click", startMusic);
+document.addEventListener("touchstart", startMusic);
+document.addEventListener("keydown", startMusic);
+
+    
     const PETAL_LAYERS = [
         { count: 4, w: 24, h: 46, curl: 78, delayBase: 0, tz: 2, cls: 'petal-bud' },
         { count: 5, w: 34, h: 58, curl: 65, delayBase: 0.25, tz: 9, cls: 'petal-core' },
