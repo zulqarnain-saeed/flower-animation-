@@ -15,33 +15,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const fallingPetalsEl = document.getElementById('fallingPetals');
     const scene = document.querySelector('.scene');
 
-
-
-const music = document.getElementById("bgMusic");
-
-// Try to play when the website opens
-window.addEventListener("load", () => {
+    const music = document.getElementById("bgMusic");
     music.volume = 0.5;
 
-    music.play().catch(() => {
-        // Autoplay was blocked — wait for first interaction
-    });
-});
+    // Mobile audio unlock function
+    function playMusic() {
+        if (music.paused) {
+            music.play().catch(err => {
+                console.log("Audio playback delayed or blocked by browser:", err);
+            });
+        }
+    }
 
-// Start music on the first user interaction
-const startMusic = () => {
-    music.play().catch(() => {});
-    
-    document.removeEventListener("click", startMusic);
-    document.removeEventListener("touchstart", startMusic);
-    document.removeEventListener("keydown", startMusic);
-};
-
-document.addEventListener("click", startMusic);
-document.addEventListener("touchstart", startMusic);
-document.addEventListener("keydown", startMusic);
-
-    
     const PETAL_LAYERS = [
         { count: 4, w: 24, h: 46, curl: 78, delayBase: 0, tz: 2, cls: 'petal-bud' },
         { count: 5, w: 34, h: 58, curl: 65, delayBase: 0.25, tz: 9, cls: 'petal-core' },
@@ -62,7 +47,6 @@ document.addEventListener("keydown", startMusic);
     ];
 
     let fallingPetalInterval = null;
-
 
     function startCardLoader() {
         const duration = 2400;
@@ -94,7 +78,6 @@ document.addEventListener("keydown", startMusic);
 
         requestAnimationFrame(animateLoader);
     }
-
 
     function createSepals() {
         const step = 360 / SEPALS_COUNT;
@@ -214,7 +197,6 @@ document.addEventListener("keydown", startMusic);
         }, 2200);
     }
 
-
     async function startAnimationSequence() {
         await growStem();
         await delay(100);
@@ -235,13 +217,17 @@ document.addEventListener("keydown", startMusic);
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
+    // Direct User Gesture Connection for Music Playback
     startButton.addEventListener('click', () => {
+        playMusic(); // Instantly plays the music right on user click/tap
+        
         triggerOverlay.classList.add('fade-out');
 
         setTimeout(() => {
             startAnimationSequence();
         }, 800);
     });
+
     createSepals();
     createPetals();
 
